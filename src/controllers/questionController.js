@@ -21,6 +21,20 @@ exports.getQuestionById = async (req, res) => {
     }
 };
 
+// GET questions by materia
+exports.getQuestionsByMateria = async (req, res) => {
+    try {
+        const { materia } = req.params; // Use req.params to get the materia value
+        if (!materia) {
+            return res.status(400).json({ error: 'Materia parameter is required' });
+        }
+        const questions = await Question.find({ materia }); // Query by materia field
+        res.status(200).json(questions);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 // POST a new question
 exports.createQuestion = async (req, res) => {
     try {

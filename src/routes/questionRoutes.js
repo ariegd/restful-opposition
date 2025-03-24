@@ -17,4 +17,7 @@ router.put('/questions/:id', questionController.updateQuestion);
 // DELETE a question by ID
 router.delete('/questions/:id', questionController.deleteQuestion);
 
+// GET questions by materia
+router.get('/questions/materia/:materia', questionController.getQuestionsByMateria);
+
 module.exports = router;
