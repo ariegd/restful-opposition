@@ -79,6 +79,35 @@ exports.getQuestionsByPrograma = async (req, res) => {
     }
 };
 
+// GET questions by examen
+exports.getQuestionsByExamen = async (req, res) => {
+    try {
+        const { examen } = req.params; // Use req.params to get the examen value
+        const limit = parseInt(req.query.limit) || 0; // Get the limit from query, default to 0 (no limit)
+        const random = req.query.random === 'true'; // Check if randomization is requested
+
+        if (!examen) {
+            return res.status(400).json({ error: 'Examen parameter is required' });
+        }
+
+        let questions;
+        if (random) {
+            // Use aggregation with $match and $sample for random selection
+            questions = await Question.aggregate([
+                { $match: { examen } },
+                { $sample: { size: limit || 5 } } // Default to 5 if no limit is provided
+            ]);
+        } else {
+            // Regular query with optional limit
+            questions = await Question.find({ examen }).limit(limit);
+        }
+
+        res.status(200).json(questions);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 // POST a new question
 exports.createQuestion = async (req, res) => {
     try {

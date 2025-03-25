@@ -7,6 +7,7 @@ Creando App RESTful-API en Node.js y Mondodb, ayuda de Github Copilet en VSCode
 - **POST /api/users** - Create a new user.
 - **GET /api/questions/materia/:materia** - Retrieve questions by `materia`.
 - **GET /api/questions/programa/:programa** - Retrieve questions by `programa`.
+- **GET /api/questions/examen/:examen** - Retrieve questions by `examen`.
 
 This structure is modular and scalable, making it easy to add more resources in the future.
 

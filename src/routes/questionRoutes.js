@@ -23,4 +23,7 @@ router.get('/questions/materia/:materia', questionController.getQuestionsByMater
 // GET questions by programa
 router.get('/questions/programa/:programa', questionController.getQuestionsByPrograma);
 
+// GET questions by examen
+router.get('/questions/examen/:examen', questionController.getQuestionsByExamen);
+
 module.exports = router;
