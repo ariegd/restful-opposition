@@ -26,10 +26,24 @@ exports.getQuestionsByMateria = async (req, res) => {
     try {
         const { materia } = req.params; // Use req.params to get the materia value
         const limit = parseInt(req.query.limit) || 0; // Get the limit from query, default to 0 (no limit)
+        const random = req.query.random === 'true'; // Check if randomization is requested
+
         if (!materia) {
             return res.status(400).json({ error: 'Materia parameter is required' });
         }
-        const questions = await Question.find({ materia }).limit(limit); // Apply the limit
+
+        let questions;
+        if (random) {
+            // Use aggregation with $match and $sample for random selection
+            questions = await Question.aggregate([
+                { $match: { materia } },
+                { $sample: { size: limit || 5 } } // Default to 5 if no limit is provided
+            ]);
+        } else {
+            // Regular query with optional limit
+            questions = await Question.find({ materia }).limit(limit);
+        }
+
         res.status(200).json(questions);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -41,10 +55,24 @@ exports.getQuestionsByPrograma = async (req, res) => {
     try {
         const { programa } = req.params; // Use req.params to get the programa value
         const limit = parseInt(req.query.limit) || 0; // Get the limit from query, default to 0 (no limit)
+        const random = req.query.random === 'true'; // Check if randomization is requested
+
         if (!programa) {
             return res.status(400).json({ error: 'Programa parameter is required' });
         }
-        const questions = await Question.find({ programa }).limit(limit); // Apply the limit
+
+        let questions;
+        if (random) {
+            // Use aggregation with $match and $sample for random selection
+            questions = await Question.aggregate([
+                { $match: { programa } },
+                { $sample: { size: limit || 5 } } // Default to 5 if no limit is provided
+            ]);
+        } else {
+            // Regular query with optional limit
+            questions = await Question.find({ programa }).limit(limit);
+        }
+
         res.status(200).json(questions);
     } catch (error) {
         res.status(500).json({ error: error.message });

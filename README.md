@@ -19,3 +19,11 @@ GET /api/questions/materia/sql?limit=5
 ```
 
 Replace `sql` with the desired `materia` value. The optional `limit` query parameter specifies the maximum number of questions to return. For example, `limit=5` will return up to 5 questions.
+
+To retrieve random questions by `materia`, use the `random=true` query parameter:
+
+```
+GET /api/questions/materia/sql?random=true&limit=5
+```
+
+This will return up to 5 random questions where the `materia` field matches the value `sql`.
