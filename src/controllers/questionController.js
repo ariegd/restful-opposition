@@ -25,10 +25,11 @@ exports.getQuestionById = async (req, res) => {
 exports.getQuestionsByMateria = async (req, res) => {
     try {
         const { materia } = req.params; // Use req.params to get the materia value
+        const limit = parseInt(req.query.limit) || 0; // Get the limit from query, default to 0 (no limit)
         if (!materia) {
             return res.status(400).json({ error: 'Materia parameter is required' });
         }
-        const questions = await Question.find({ materia }); // Query by materia field
+        const questions = await Question.find({ materia }).limit(limit); // Apply the limit
         res.status(200).json(questions);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -39,10 +40,11 @@ exports.getQuestionsByMateria = async (req, res) => {
 exports.getQuestionsByPrograma = async (req, res) => {
     try {
         const { programa } = req.params; // Use req.params to get the programa value
+        const limit = parseInt(req.query.limit) || 0; // Get the limit from query, default to 0 (no limit)
         if (!programa) {
             return res.status(400).json({ error: 'Programa parameter is required' });
         }
-        const questions = await Question.find({ programa }); // Query by programa field
+        const questions = await Question.find({ programa }).limit(limit); // Apply the limit
         res.status(200).json(questions);
     } catch (error) {
         res.status(500).json({ error: error.message });

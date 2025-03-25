@@ -6,6 +6,7 @@ Creando App RESTful-API en Node.js y Mondodb, ayuda de Github Copilet en VSCode
 - **GET /api/users** - Retrieve all users.
 - **POST /api/users** - Create a new user.
 - **GET /api/questions/materia/:materia** - Retrieve questions by `materia`.
+- **GET /api/questions/programa/:programa** - Retrieve questions by `programa`.
 
 This structure is modular and scalable, making it easy to add more resources in the future.
 
@@ -14,7 +15,7 @@ This structure is modular and scalable, making it easy to add more resources in 
 To query questions by `materia`, send a GET request to the following endpoint:
 
 ```
-GET /api/questions/materia/sql
+GET /api/questions/materia/sql?limit=5
 ```
 
-Replace `sql` with the desired `materia` value. This will return all questions where the `materia` field matches the value.
+Replace `sql` with the desired `materia` value. The optional `limit` query parameter specifies the maximum number of questions to return. For example, `limit=5` will return up to 5 questions.
