@@ -20,4 +20,7 @@ router.delete('/questions/:id', questionController.deleteQuestion);
 // GET questions by materia
 router.get('/questions/materia/:materia', questionController.getQuestionsByMateria);
 
+// GET questions by programa
+router.get('/questions/programa/:programa', questionController.getQuestionsByPrograma);
+
 module.exports = router;

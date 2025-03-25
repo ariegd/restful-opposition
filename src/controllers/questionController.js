@@ -35,6 +35,20 @@ exports.getQuestionsByMateria = async (req, res) => {
     }
 };
 
+// GET questions by programa
+exports.getQuestionsByPrograma = async (req, res) => {
+    try {
+        const { programa } = req.params; // Use req.params to get the programa value
+        if (!programa) {
+            return res.status(400).json({ error: 'Programa parameter is required' });
+        }
+        const questions = await Question.find({ programa }); // Query by programa field
+        res.status(200).json(questions);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 // POST a new question
 exports.createQuestion = async (req, res) => {
     try {
