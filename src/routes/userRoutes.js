@@ -17,4 +17,7 @@ router.put('/users/:id', userController.updateUser);
 // DELETE a user by ID
 router.delete('/users/:id', userController.deleteUser);
 
+// Save user score
+router.post('/users/score', userController.saveUserScore);
+
 module.exports = router;

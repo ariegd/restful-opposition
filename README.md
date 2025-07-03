@@ -1,6 +1,9 @@
 # restful-opposition
 Creando App RESTful-API en Node.js y Mondodb, ayuda de Github Copilet en VSCode
 
+## API Endpoints from Books
+- **GET /api/books** - Retrieve all books.
+
 ## Example API Endpoints
 
 - **GET /api/users** - Retrieve all users.
