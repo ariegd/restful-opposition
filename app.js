@@ -6,6 +6,7 @@ const dbConfig = require('./src/config/db');
 const userRoutes = require('./src/routes/userRoutes');
 const questionRoutes = require('./src/routes/questionRoutes');
 const bookRoutes = require('./src/routes/bookRoutes');
+const questionBookRoutes = require('./src/routes/questionBookRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ dbConfig();
 app.use('/api', userRoutes);
 app.use('/api', questionRoutes); // Add question routes
 app.use('/api', bookRoutes);
+app.use('/api', questionBookRoutes);
 
 // Start the server
 app.listen(PORT, () => {
