@@ -1,21 +1,21 @@
-const QuestionBook = require('../models/questionBookModel');
+const QBook = require('../models/qBookModel');
 
-// GET all QuestionBooks
-exports.getAllQuestionBooks = async (req, res) => {
+// GET all QBooks
+exports.getAllQBooks = async (req, res) => {
     try {
-        const questions_books = await QuestionBook.find();
-        res.status(200).json(questions_books);
+        const qbooks = await QBook.find();
+        res.status(200).json(qbooks);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-// GET a single QuestionBook by ID
-exports.getQuestionBookById = async (req, res) => {
+// GET a single QBook by ID
+exports.getQBookById = async (req, res) => {
     try {
-        const question_book = await QuestionBook.findById(req.params.id);
-        if (!question_book) return res.status(404).json({ message: 'QuestionBook not found' });
-        res.status(200).json(question_book);
+        const qbook = await QBook.findById(req.params.id);
+        if (!qbook) return res.status(404).json({ message: 'QBook not found' });
+        res.status(200).json(qbook);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -108,35 +108,37 @@ exports.getQuestionBookById = async (req, res) => {
     }
 };
  */
-// POST a new QuestionBook
-exports.createQuestionBook = async (req, res) => {
+// POST a new QBook
+/*
+exports.createQBook = async (req, res) => {
     try {
-        const new_question_book = new QuestionBook(req.body);
-        const saved_question_book = await new_question_book.save();
-        res.status(201).json(saved_question_book);
+        const newQBook = new QBook(req.body);
+        const savedQBook = await newQBook.save();
+        res.status(201).json(savedQBook);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
 
-// PUT to update a QuestionBook by ID
-exports.updateQuestionBook = async (req, res) => {
+// PUT to update a QBook by ID
+exports.updateQBook = async (req, res) => {
     try {
-        const updated_question_book = await QuestionBook.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updated_question_book) return res.status(404).json({ message: 'QuestionBook not found' });
-        res.status(200).json(updated_question_book);
+        const updatedQBook = await QBook.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updatedQBook) return res.status(404).json({ message: 'QBook not found' });
+        res.status(200).json(updatedQBook);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
 
-// DELETE a QuestionBook by ID
-exports.deleteQuestionBook = async (req, res) => {
+// DELETE a QBook by ID
+exports.deleteQBook = async (req, res) => {
     try {
-        const deleted_question_book = await QuestionBook.findByIdAndDelete(req.params.id);
-        if (!deleted_question_book) return res.status(404).json({ message: 'QuestionBook not found' });
-        res.status(200).json({ message: 'QuestionBook deleted successfully' });
+        const deletedQBook = await QBook.findByIdAndDelete(req.params.id);
+        if (!deletedQBook) return res.status(404).json({ message: 'QBook not found' });
+        res.status(200).json({ message: 'QBook deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+*/

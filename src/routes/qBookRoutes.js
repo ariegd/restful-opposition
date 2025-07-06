@@ -1,24 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const questionController = require('../controllers/questionBookController');
+const qBookController = require('../controllers/qBookController');
 
 // GET all questions
-router.get('/qbooks', questionController.getAllQuestionBooks);
+router.get('/qbooks', qBookController.getAllQBooks);
 
 // GET a single question by ID
-router.get('/qbooks/:id', questionController.getQuestionBookById);
+router.get('/qbooks/:id', qBookController.getQBookById);
 
 // POST a new question
-router.post('/qbooks', questionController.createQuestionBook);
+/*router.post('/qbooks', questionBookController.createQuestionBook);
 
 // PUT to update a question by ID
-router.put('/qbooks/:id', questionController.updateQuestionBook);
+router.put('/qbooks/:id', questionBookController.updateQuestionBook);
 
 // DELETE a question by ID
-router.delete('/qbooks/:id', questionController.deleteQuestionBook);
+router.delete('/qbooks/:id', questionBookController.deleteQuestionBook);
 
 // GET questions by materia
-/* router.get('/qbooks/materia/:materia', questionController.getQuestionsByMateria);
+ router.get('/qbooks/materia/:materia', questionController.getQuestionsByMateria);
 
 // GET questions by programa
 router.get('/qbooks/programa/:programa', questionController.getQuestionsByPrograma);
