@@ -21,11 +21,25 @@ exports.getQBookById = async (req, res) => {
     }
 };
 
-// GET QBooks by books_id
+// GET QBooks by books_id (with optional random)
 exports.getQBooksByIdBook = async (req, res) => {
     try {
-        const qbooks = await QBook.find({ books_id: req.params.bookId });
-        res.json(qbooks);
+        const { random } = req.query;
+        const limit = parseInt(req.query.limit) || 0; // Get the limit from query, default to 0 (no limit)
+        const bookId = req.params.bookId;
+
+        if (random === 'true') {
+            // Devuelve los QBooks de manera aleatoria
+            const qbooks = await QBook.aggregate([
+                { $match: { books_id: bookId } },
+                { $sample: { size: limit || 10 } } // Cambia el tamaño si quieres limitar el número de resultados
+            ]);
+            return res.json(qbooks);
+        } else {
+            // Devuelve los QBooks normalmente
+            const qbooks = await QBook.find({ books_id: bookId }).limit(limit);
+            return res.json(qbooks);
+        }
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

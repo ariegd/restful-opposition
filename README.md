@@ -1,10 +1,49 @@
 # restful-opposition
 Creando App RESTful-API en Node.js y Mondodb, ayuda de Github Copilet en VSCode
 
+- [agregar random=true  si cuando llame exports.getQBooksByIdBook obtener los QBooks de manera aleatoria](#apartado-5)
 - [API Endpoints from QuestionBooks](#apartado-4)
 - [Example API Endpoints](#apartado-3)
 - [Access-Control-Allow-Origin (CORS)](#apartado-2)
 - [Add and configure the `cors` middleware.](#apartado-1)
+
+## Apartado 5
+**agregar random=true  si cuando llame exports.getQBooksByIdBook obtener los QBooks de manera aleatoria**
+
+**API Endpoints from QBooks**
+http://localhost:3000/api/qbooks/id/6866c9c36eabdff058bf227a?limit=1&random=true
+
+Claro, puedes modificar tu función `exports.getQBooksByIdBook` para que acepte el parámetro de query `random=true` y, si está presente, devuelva los QBooks de ese `books_id` en orden aleatorio usando agregación con `$match` y `$sample`.  
+Aquí tienes el código actualizado:
+
+```javascript
+// GET QBooks by books_id (with optional random)
+exports.getQBooksByIdBook = async (req, res) => {
+    try {
+        const { random } = req.query;
+        const bookId = req.params.bookId;
+
+        if (random === 'true') {
+            // Devuelve los QBooks de manera aleatoria
+            const qbooks = await QBook.aggregate([
+                { $match: { books_id: bookId } },
+                { $sample: { size: 10 } } // Cambia el tamaño si quieres limitar el número de resultados
+            ]);
+            return res.json(qbooks);
+        } else {
+            // Devuelve los QBooks normalmente
+            const qbooks = await QBook.find({ books_id: bookId });
+            return res.json(qbooks);
+        }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+```
+
+**Notas:**
+- Puedes ajustar el valor de `size` en `$sample` según el límite que desees (o tomarlo de `req.query.limit` si lo necesitas).
+- Ahora puedes llamar a `/api/qbooks/:bookId?random=true` para obtener los QBooks aleatorios de ese libro.
 
 ## Apartado 4
 **API Endpoints from QuestionBooks**
