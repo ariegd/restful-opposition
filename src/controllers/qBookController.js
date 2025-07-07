@@ -21,35 +21,16 @@ exports.getQBookById = async (req, res) => {
     }
 };
 
-// GET QuestionBooks by materia
-/* exports.getQuestionBooksByMateria = async (req, res) => {
+// GET QBooks by books_id
+exports.getQBooksByIdBook = async (req, res) => {
     try {
-        const { materia } = req.params; // Use req.params to get the materia value
-        const limit = parseInt(req.query.limit) || 0; // Get the limit from query, default to 0 (no limit)
-        const random = req.query.random === 'true'; // Check if randomization is requested
-
-        if (!materia) {
-            return res.status(400).json({ error: 'Materia parameter is required' });
-        }
-
-        let QuestionBooks;
-        if (random) {
-            // Use aggregation with $match and $sample for random selection
-            QuestionBooks = await QuestionBook.aggregate([
-                { $match: { materia } },
-                { $sample: { size: limit || 5 } } // Default to 5 if no limit is provided
-            ]);
-        } else {
-            // Regular query with optional limit
-            QuestionBooks = await QuestionBook.find({ materia }).limit(limit);
-        }
-
-        res.status(200).json(QuestionBooks);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+        const qbooks = await QBook.find({ books_id: req.params.bookId });
+        res.json(qbooks);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 };
- */
+
 // GET QuestionBooks by programa
 /* exports.getQuestionBooksByPrograma = async (req, res) => {
     try {
