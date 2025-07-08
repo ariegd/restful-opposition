@@ -11,6 +11,9 @@ router.get('/qbooks/:id', qBookController.getQBookById);
 // GET qBooks by books_id
  router.get('/qbooks/id/:bookId', qBookController.getQBooksByIdBook);
 
+// GET qBooks by books_id and capitulo
+router.get('/qbooks/id/:bookId/capitulo/:capitulo', qBookController.getQBooksByIdBookAndCapitulo);
+
 // POST a new question
 /*router.post('/qbooks', questionBookController.createQuestionBook);
 

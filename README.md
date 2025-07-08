@@ -1,11 +1,89 @@
 # restful-opposition
 Creando App RESTful-API en Node.js y Mondodb, ayuda de Github Copilet en VSCode
 
+- [agragarle limit y random a exports.getQBooksByIdBookAndCapitulo](#apartado-7)
+- [obtener qbooks por books_id y capitulo](#apartado-6)
 - [agregar random=true  si cuando llame exports.getQBooksByIdBook obtener los QBooks de manera aleatoria](#apartado-5)
 - [API Endpoints from QuestionBooks](#apartado-4)
 - [Example API Endpoints](#apartado-3)
 - [Access-Control-Allow-Origin (CORS)](#apartado-2)
 - [Add and configure the `cors` middleware.](#apartado-1)
+
+
+## Apartado 7
+**agragarle limit y random a exports.getQBooksByIdBookAndCapitulo**
+Aquí tienes la función `exports.getQBooksByIdBookAndCapitulo` mejorada para aceptar los parámetros `limit` y `random` desde la query string, igual que en tu función por `books_id`:
+
+```javascript
+// GET qBooks by books_id and capitulo (with optional limit and random)
+exports.getQBooksByIdBookAndCapitulo = async (req, res) => {
+    try {
+        const { bookId, capitulo } = req.params;
+        const limit = parseInt(req.query.limit) || 0;
+        const random = req.query.random === 'true';
+
+        if (random) {
+            // Selección aleatoria usando agregación
+            const qbooks = await QBook.aggregate([
+                { $match: { books_id: bookId, capitulo: capitulo } },
+                { $sample: { size: limit || 10 } }
+            ]);
+            return res.json(qbooks);
+        } else {
+            // Consulta normal con limit opcional
+            const qbooks = await QBook.find({ books_id: bookId, capitulo: capitulo }).limit(limit);
+            return res.json(qbooks);
+        }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+```
+
+**Ahora puedes usar:**  
+`/api/qbooks/id/:bookId/capitulo/:capitulo?limit=5&random=true`  
+para obtener resultados aleatorios y/o limitados.
+
+## Apartado 6
+**obtener qbooks por books_id y capitulo**
+Para obtener los **qbooks** por `books_id` **y** `capitulo`, debes:
+
+1. **Crear una ruta en tu router** que acepte ambos parámetros.
+2. **Crear el controlador** que filtre por ambos campos.
+
+---
+
+### 1. Ruta en qBookRoutes.js:
+
+```javascript
+// GET qBooks by books_id and capitulo
+router.get('/qbooks/id/:bookId/capitulo/:capitulo', qBookController.getQBooksByIdBookAndCapitulo);
+```
+
+---
+
+### 2. Controlador en `qBookController.js`:
+
+```javascript
+// GET qBooks by books_id and capitulo
+exports.getQBooksByIdBookAndCapitulo = async (req, res) => {
+    try {
+        const { bookId, capitulo } = req.params;
+        const qbooks = await QBook.find({ books_id: bookId, capitulo: capitulo });
+        res.json(qbooks);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+```
+
+---
+
+**Ahora puedes consultar:**  
+```
+GET /api/qbooks/id/<bookId>/capitulo/<capitulo>
+```
+y obtendrás todos los qbooks que coincidan con ese `books_id` y ese `capitulo`.
 
 ## Apartado 5
 **agregar random=true  si cuando llame exports.getQBooksByIdBook obtener los QBooks de manera aleatoria**

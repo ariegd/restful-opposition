@@ -28,6 +28,10 @@ exports.getQBooksByIdBook = async (req, res) => {
         const limit = parseInt(req.query.limit) || 0; // Get the limit from query, default to 0 (no limit)
         const bookId = req.params.bookId;
 
+        if (!bookId) {
+            return res.status(400).json({ error: 'book_id parameter is required' });
+        }
+
         if (random === 'true') {
             // Devuelve los QBooks de manera aleatoria
             const qbooks = await QBook.aggregate([
@@ -45,34 +49,29 @@ exports.getQBooksByIdBook = async (req, res) => {
     }
 };
 
-// GET QuestionBooks by programa
-/* exports.getQuestionBooksByPrograma = async (req, res) => {
+// GET qBooks by books_id and capitulo
+exports.getQBooksByIdBookAndCapitulo = async (req, res) => {
     try {
-        const { programa } = req.params; // Use req.params to get the programa value
-        const limit = parseInt(req.query.limit) || 0; // Get the limit from query, default to 0 (no limit)
-        const random = req.query.random === 'true'; // Check if randomization is requested
+        const { bookId, capitulo } = req.params;
+        const limit = parseInt(req.query.limit) || 0;
+        const random = req.query.random === 'true';
 
-        if (!programa) {
-            return res.status(400).json({ error: 'Programa parameter is required' });
-        }
-
-        let QuestionBooks;
         if (random) {
-            // Use aggregation with $match and $sample for random selection
-            QuestionBooks = await QuestionBook.aggregate([
-                { $match: { programa } },
-                { $sample: { size: limit || 5 } } // Default to 5 if no limit is provided
+            // Selección aleatoria usando agregación
+            const qbooks = await QBook.aggregate([
+                { $match: { books_id: bookId, capitulo: capitulo } },
+                { $sample: { size: limit || 10 } }
             ]);
+            return res.json(qbooks);
         } else {
-            // Regular query with optional limit
-            QuestionBooks = await QuestionBook.find({ programa }).limit(limit);
+            // Consulta normal con limit opcional
+            const qbooks = await QBook.find({ books_id: bookId, capitulo: capitulo }).limit(limit);
+            return res.json(qbooks);
         }
-
-        res.status(200).json(QuestionBooks);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
-}; */
+};
 
 // GET QuestionBooks by examen
 /* exports.getQuestionBooksByExamen = async (req, res) => {
