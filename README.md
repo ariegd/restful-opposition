@@ -1,6 +1,7 @@
 # restful-opposition
 Creando App RESTful-API en Node.js y Mondodb, ayuda de Github Copilet en VSCode
 
+- [exports.getQBooksByIdBookAndCapitulo no funciona el random](#apartado-8)
 - [agragarle limit y random a exports.getQBooksByIdBookAndCapitulo](#apartado-7)
 - [obtener qbooks por books_id y capitulo](#apartado-6)
 - [agregar random=true  si cuando llame exports.getQBooksByIdBook obtener los QBooks de manera aleatoria](#apartado-5)
@@ -8,6 +9,58 @@ Creando App RESTful-API en Node.js y Mondodb, ayuda de Github Copilet en VSCode
 - [Example API Endpoints](#apartado-3)
 - [Access-Control-Allow-Origin (CORS)](#apartado-2)
 - [Add and configure the `cors` middleware.](#apartado-1)
+
+## Apartado 8
+**exports.getQBooksByIdBookAndCapitulo no funciona el random**
+El problema más común cuando el random **no funciona** en una consulta agregada con `$sample` es que el campo `capitulo` en la base de datos es de tipo **número** y en la URL (parámetro) lo recibes como **string**.  
+Esto hace que el `$match` no encuentre coincidencias y `$sample` devuelva un array vacío.
+
+---
+
+## Solución
+
+Convierte el parámetro `capitulo` al tipo correcto antes de usarlo en el `$match`.  
+Por ejemplo, si `capitulo` es un número en tu base de datos:
+
+```javascript
+// GET qBooks by books_id and capitulo (with optional limit and random)
+exports.getQBooksByIdBookAndCapitulo = async (req, res) => {
+    try {
+        const { bookId } = req.params;
+        let { capitulo } = req.params;
+        const limit = parseInt(req.query.limit) || 0;
+        const random = req.query.random === 'true';
+
+        // Si el campo en MongoDB es numérico, convierte capitulo a número
+        if (!isNaN(capitulo)) capitulo = Number(capitulo);
+
+        if (random) {
+            const qbooks = await QBook.aggregate([
+                { $match: { books_id: bookId, capitulo: capitulo } },
+                { $sample: { size: limit || 10 } }
+            ]);
+            return res.json(qbooks);
+        } else {
+            const qbooks = await QBook.find({ books_id: bookId, capitulo: capitulo }).limit(limit);
+            return res.json(qbooks);
+        }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+```
+
+---
+
+## Resumen
+
+- Si `capitulo` es un número en MongoDB, **convierte el parámetro a número** antes de usarlo en el `$match`.
+- Así, el random funcionará correctamente y devolverá resultados aleatorios.
+
+---
+
+**Si el campo `capitulo` es string en tu base de datos, no necesitas la conversión.**  
+Verifica el tipo en tu colección y ajusta según corresponda.
 
 
 ## Apartado 7

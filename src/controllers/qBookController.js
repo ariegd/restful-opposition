@@ -49,22 +49,24 @@ exports.getQBooksByIdBook = async (req, res) => {
     }
 };
 
-// GET qBooks by books_id and capitulo
+// GET qBooks by books_id and capitulo (with optional limit and random)
 exports.getQBooksByIdBookAndCapitulo = async (req, res) => {
     try {
-        const { bookId, capitulo } = req.params;
+        const { bookId } = req.params;
+        let { capitulo } = req.params;
         const limit = parseInt(req.query.limit) || 0;
         const random = req.query.random === 'true';
 
+        // Si el campo en MongoDB es numérico, convierte capitulo a número
+        if (!isNaN(capitulo)) capitulo = Number(capitulo);
+
         if (random) {
-            // Selección aleatoria usando agregación
             const qbooks = await QBook.aggregate([
                 { $match: { books_id: bookId, capitulo: capitulo } },
                 { $sample: { size: limit || 10 } }
             ]);
             return res.json(qbooks);
         } else {
-            // Consulta normal con limit opcional
             const qbooks = await QBook.find({ books_id: bookId, capitulo: capitulo }).limit(limit);
             return res.json(qbooks);
         }
